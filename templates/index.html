@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+
+    <link rel="stylesheet" href="static/style.css" />
+  </head>
+
+<meta charset="utf-8">
+<body>
+<div class="row">
+
+	<div class="progress col-md-4">
+	  <div i=0 class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+	  aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+	    Array generation 
+	  </div>
+	</div>
+</div>
+
+<div class="progress">
+  <div i=1 class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
+  aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+    f1
+  </div>
+</div>
+
+<div class="progress">
+  <div i=2 class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar"
+  aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+    f2
+  </div>
+</div>
+
+<div class="progress">
+  <div i=3 class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
+  aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+    f3
+  </div>
+</div>
+
+
+<div class="progress">
+  <div i=4 class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
+  aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+    f4
+  </div>
+</div>
+
+
+<div class="progress">
+  <div i=5 class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
+  aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+    f5
+  </div>
+</div>
+
+<div class="progress">
+  <div i=6 class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
+  aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+    f6
+  </div>
+</div>
+
+<div class="progress">
+  <div i=7 class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
+  aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+    f7
+  </div>
+</div>
+
+<div class="progress">
+  <div i=8 class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
+  aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+    f8
+  </div>
+</div>
+
+<a class="btn btn-large btn-success" href="javascript: onclick();">Run</a>
+
+
+
+
+</body>
+
+
+
+
+<script>
+var flag = 0;
+function onclick(){
+
+if (flag == 0){
+	flag = 1;
+clear_pb();
+$.get("/run");
+}
+
+}
+
+var bar = $('.progress-bar');
+var data = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+var data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+var offset = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+
+function clear_pb(){
+	console.log(flag);
+	data = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+	data1 = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+	offset = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+	dataset = 0;
+	var bar = $('.progress-bar');
+	$(function(){
+	  $(bar).each(function(){
+	    bar_width = $(this).attr('aria-valuenow');
+	    bar_width = 0;
+	    console.log(bar_width);
+	   
+	    $(this).width(bar_width + '%');
+	  });
+
+	 });
+}
+
+
+
+function update_pb2(){
+var bar = $('.progress-bar');
+$(function(){
+  $(bar).each(function(){
+    bar_width = $(this).attr('aria-valuenow');
+    i =$(this).attr('i');
+    //j =$(this).css('margin-left');
+
+    //j=j.replace(/px/g,"");
+    if (!data1[i] && !data[i]){
+        offset[i] = offset[i] +10;
+        g =$(this).css('margin-left', offset[i] + 'px');
+    console.log(offset);
+    }
+    //j =$(this).css('margin-left', 20 + 'px');
+    //j=j+1;
+    bar_width = data[i];
+  //  console.log($(this).attr('aria-valuenow'));
+    $(this).width(bar_width + '%');
+  });
+
+});
+}
+//get data from webserver(threas status - json)
+setInterval(function() {
+    $.getJSON('/_get_data', {
+    }, function(dataset) {
+        data1 = dataset
+       });
+        console.log ( data1 )
+    update();
+}, 2000);
+function update() {
+	fg = 0;
+        for (var i = 0; i < data1.length; i++) {
+         if (data1[i]) {
+	 fg = 1;
+          data[i] = data[i] + 1;
+	  update_pb2();
+          }
+        }
+	if (!fg){
+	flag = 0;
+	}else {
+	flag=1}
+}
+</script>

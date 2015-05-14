@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+
+    <link rel="stylesheet" href="static/style.css" />
+  </head>
+
+<meta charset="utf-8">
+<style>
+
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
+
+</style>
+<div class="chart"></div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var data = [];
+for (i = 0; i < 5; i++) {
+  letter = Math.floor(Math.random() * 26)
+  data.unshift(letter)
+}
+
+
+var x = d3.scale.linear()
+    .domain([0, d3.max(data)])
+    .range([0, 420]);
+
+d3.select(".chart")
+  .selectAll("div")
+    .data(data)
+  .enter().append("div")
+    .style("width", function(d) { return x(d) + "px"; })
+    .text(function(d) { return d; });
+
+setInterval(function() {
+
+    $.getJSON('/_get_data', {
+    }, function(dataset) {
+        data = dataset.result.split("")
+       });
+
+   update(data);
+}, 2000);
+
+
+
+function update(set) {
+
+  var text = svg.selectAll("text")
+    .data(set, function(d) { return d; })
+  ;
+
+  text.attr("class", "update")
+    .transition()
+    .duration(750)
+    .attr("x", function(d, i) { return i * spacing; })
+    .attr("y", height/2);
+  ;
+
+  text.enter().append("text")
+    .attr("class", "enter")
+    .attr("x", function(d, i) { return i * spacing; })
+    .attr("y", margin.top + 48)
+      .style("fill-opacity", 1)
+  ;
+
+  text.text(function(d) { return d; });
+
+  text.exit()
+    .attr("class", "exit")
+    .transition()
+    .duration(750)
+    .attr("y", height)
+    .style("fill-opacity", 1e-6)
+    .remove()
+  ;
+
+}
+
+
+
+</script>
+

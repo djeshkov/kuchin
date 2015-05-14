@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+
+    <link rel="stylesheet" href="static/style.css" />
+  </head>
+
+<meta charset="utf-8">
+<style>
+
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+    <span class="sr-only">60% Complete</span>
+  </div>
+</div>
+
+.chart rect {
+  fill: steelblue;
+}
+
+.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
+
+</style>
+<svg class="chart"></svg>
+<script>
+
+
+
+var data = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+var data1 = [1, 1, 0, 0, 0, 0, 1, 2, 3];
+var offset = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+
+
+var width = 420,
+    barHeight = 20;
+
+var x = d3.scale.linear()
+    .domain([0, d3.max(data)])
+    .range([0, width]);
+
+var chart = d3.select(".chart")
+    .attr("width", width)
+    .attr("height", barHeight * data.length);
+
+var bar = chart.selectAll("g")
+    .data(data)
+  .enter().append("g")
+    .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+bar.append("rect")
+    .attr("width", x)
+    .attr("height", barHeight - 1);
+
+bar.append("text")
+    .attr("x", function(d) { return x(d) - 3; })
+    .attr("y", barHeight / 2)
+    .attr("dy", ".35em")
+    .text(function(d) { return d; });
+
+setInterval(function() {
+
+    $.getJSON('/_get_data', {
+    }, function(dataset) {
+
+        data1 = dataset
+       });
+	console.log ( data1 )
+    update();
+}, 2000);
+
+
+
+function update() {
+
+
+	for (var i = 0; i < data1.length; i++) {
+	 if (data1[i]) {
+	  data[i] = data[i] + 1;
+
+//          console.log ( data[i] );
+ //         console.log ( data1[i] );
+	  }
+
+         //alert( data2 );
+	}
+
+         console.log ( data );
+         console.log ( data1 );
+
+}
+
+
+
+
+
+
+</script>

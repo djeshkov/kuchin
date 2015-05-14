@@ -1,0 +1,23 @@
+#d3 {
+	border: 1px solid grey;
+}
+
+h1, p {
+	margin: 20px;
+}
+
+text {
+  font: bold 48px monospace;
+}
+
+.enter {
+  fill: green;
+}
+
+.update {
+  fill: darkblue;
+}
+
+.exit {
+  fill: brown;
+}
